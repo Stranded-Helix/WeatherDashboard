@@ -1,0 +1,30 @@
+:root {
+    --color-primary: #4b88a2;
+    --color-secondary: #BB0A21;
+    --color-tertiary: #D3D4D9;
+    --color-light: #FFF9FB;
+    --color-dark: #252627;
+}
+
+body {
+    background-color: var(--color-dark);
+    color: var(--color-light);
+}
+
+.top-banner {
+    background-color: var(--color-primary);
+}
+
+.left-column {
+    background-color: var(--color-secondary)
+}
+
+.middle-column {
+    background-color: var(--color-primary);
+}
+
+.right-column {
+    background-color: var(--color-tertiary);
+}
+
+
