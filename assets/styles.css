@@ -27,4 +27,35 @@ body {
     background-color: var(--color-tertiary);
 }
 
+.current-weather {
+    color: var(--color-dark);
+}
 
+.uv-green {
+    background-color: green;
+}
+
+.uv-yellow {
+    background-color: yellow;
+}
+
+.uv-orange {
+    background-color: orange;
+}
+
+.uv-red {
+    background-color: red;
+}
+
+.uv-violet {
+    background-color: violet;
+}
+
+.uv {
+    padding: 1px;
+    border-radius: 5px;
+}
+
+.five-day-weather {
+    color: black;
+}
