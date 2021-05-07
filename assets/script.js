@@ -2,13 +2,14 @@ var apiKey = "12fbdc900826981bfac0d2ded9e6d205";
 var baseCurrentAPIstring = "https://api.openweathermap.org/data/2.5/weather";
 var uvAPIstring = "https://api.openweathermap.org/data/2.5/uvi";
 var baseFiveDayAPIString = "https://api.openweathermap.org/data/2.5/onecall";
-//REMOVE QUERY STRING FROM LINK
+
 
 var currentWeatherEl = $(".current-weather");
 var fiveDayWeatherEl = $(".five-day-weather");
 var citySearchForm = $(".city-search-form");
 var citySearchList = $(".city-list");
 
+var citySearchedArray = [];
 var lastCitySearched = "Dallas";
 var currentCityLat = 0.0;
 var currentCityLon = 0.0;
@@ -20,49 +21,74 @@ citySearchForm.on("submit", function (event) {
     var input = event.target[0].value;
     if (input != "") {
         fetchCityWeather(input);
+        addCityToList(input);
     }
     localStorage.setItem("lastCity", input);
 
+})
+
+citySearchList.on("click", ".city-searched-btn", function (event) {
+    console.log(event);
 })
 
 function startUp() {
     if (localStorage.getItem("lastCity")) {
         lastCitySearched = localStorage.getItem("lastCity");
     }
+    if (localStorage.getItem("citySearchedArray")){
+        citySearchedArray = JSON.parse(localStorage.getItem("citySearchedArray"))
+    }
+    displayCityList();
     fetchCityWeather(lastCitySearched);
     //Add list of recently searched
 }
 
-
+function addCityToList(city) {
+    if(!citySearchedArray.includes(city)){
+    while(citySearchedArray.length > 4){
+        citySearchedArray.pop()
+    }
+    citySearchedArray.unshift(city);
+    localStorage.setItem("citySearchedArray", JSON.stringify(citySearchedArray))
+    }
+    displayCityList();
+}
+function displayCityList() {
+    citySearchList.empty();
+    citySearchedArray.forEach(function(item) {
+        var cityListItem = $(`<a class="list-group-item list-group-item-action city-searched-btn">
+        ${item}</a>`);
+        //add class for button functionallity and event handler
+        citySearchList.append(cityListItem);
+    })
+}
 
 function displayCurrentWeather(data, uv) {
     currentWeatherEl.empty();
     var city = $(`<h2>${data.name} ${moment().format("L")}</h2>
         <img src=http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png>
-        <div>Temperature: ${convertKelvinToFarenheit(data.main.temp)} F</div>
+        <div>Temperature: ${convertKelvinToFarenheit(data.main.temp)} °F</div>
         <div>Humidity: ${data.main.humidity} %</div>
         <div>Wind Speed: ${Math.floor(data.wind.speed)} mph ${determineWindDirection(data.wind.deg)}</div>
-        <div>UV Index: <span class="uv ${getUVColor(uv.value)}">${uv.value}</span></div>`);
+        <div>UV Index: <span class="uv ${getUVColor(uv.value)} p-1">${uv.value}</span></div>`);
     currentWeatherEl.append(city);
 }
 function displayFiveDay(data) {
-    //TODO:
     console.log(data);
     fiveDayWeatherEl.empty();
     var day = moment().format("L");//Fix day increments
     for(var i = 1; i < 6; i++){
         var weatherday = data.daily[i]
-        var singleDay = $(`<div class="five-day-single-day card col-2">
+        var singleDay = $(`<div class="five-day-single-day card col-2 p-2">
         <h6>${moment(weatherday.dt, "X").format("L")}</h6>
-        <img src=http://openweathermap.org/img/wn/${weatherday.weather[0].icon}@2x.png>
-        <div>${convertKelvinToFarenheit(weatherday.temp.max)}/${convertKelvinToFarenheit(weatherday.temp.min)} F</div>
+        <img class="weather-icon" src=http://openweathermap.org/img/wn/${weatherday.weather[0].icon}@2x.png>
+        <div>${convertKelvinToFarenheit(weatherday.temp.max)}/${convertKelvinToFarenheit(weatherday.temp.min)} °F</div>
         <div>Humidity: ${weatherday.humidity} %</div>
-        <div>Wind Speed: ${Math.floor(weatherday.wind_speed)} mph ${determineWindDirection(weatherday.wind_deg)}</div>
+        <div>Wind: ${Math.floor(weatherday.wind_speed)} mph ${determineWindDirection(weatherday.wind_deg)}</div>
         </div>`);
         fiveDayWeatherEl.append(singleDay);
     }
 }
-
 function fetchCityWeather(input) {
     var url = `${baseCurrentAPIstring}?q=${input}&appid=${apiKey}`;
     console.log(url);
@@ -92,7 +118,6 @@ function fetchCityWeather(input) {
             console.log("City not Found")
         });
 }
-
 function fetchCityWeatherAll(input) {
     var urlCurrent = `${baseCurrentAPIstring}?q=${input}&appid=${apiKey}`;
     var url5Day = 
