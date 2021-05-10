@@ -1,22 +1,18 @@
 :root {
     --color-primary: #4169E1;
     --color-secondary: #25B5D3;
-    --color-tertiary: #5d615f;
+    --color-tertiary: #979B99;
     --color-light: #FFF9FB;
-    --color-dark: #252627;
+    --color-dark: #5d615f;
 }
 
 body {
     background-color: var(--color-dark);
-    color: var(--color-light);
+    color: black;
 }
 
 .top-banner {
     background-color: var(--color-dark);
-}
-
-.left-column {
-    background-color: var(--color-tertiary)
 }
 
 .middle-column {
@@ -24,11 +20,11 @@ body {
 }
 
 .right-column {
-    background-color: var(--color-light);
+    background-color: var(--color-tertiary);
 }
 
 .current-weather {
-    color: var(--color-dark);
+    color: black;
 }
 
 .uv-green {
@@ -70,7 +66,13 @@ body {
 }
 
 .list-group-item {
-    background-color: var(var(--color-secondary));
-    color: var(--color-dark)
+    background-color: var(--color-secondary);
+    color: black;
 }
+
+.list-group-item:hover {
+    background-color: var(--color-primary);
+}
+
+
 

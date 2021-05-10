@@ -29,6 +29,12 @@ citySearchForm.on("submit", function (event) {
 
 citySearchList.on("click", ".city-searched-btn", function (event) {
     console.log(event);
+    var input = event.target.innerText;
+    if (input != "") {
+        fetchCityWeather(input);
+        addCityToList(input);
+    }
+    localStorage.setItem("lastCity", input);
 })
 
 function startUp() {
@@ -58,7 +64,6 @@ function displayCityList() {
     citySearchedArray.forEach(function(item) {
         var cityListItem = $(`<a class="list-group-item list-group-item-action city-searched-btn">
         ${item}</a>`);
-        //add class for button functionallity and event handler
         citySearchList.append(cityListItem);
     })
 }
